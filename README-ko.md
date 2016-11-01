@@ -1,7 +1,6 @@
 ---
 >-
-  VIM 관련 문의는 [Twitter](https://twitter.com/_mhinz_)로 해주세요. 이 링크는 제
-  [vimrc](https://github.com/mhinz/dotfiles/blob/master/.vim/vimrc)입니다.
+  VIM 관련 문의는 [Twitter](https://twitter.com/_mhinz_)로 해주세요. 이 링크는 제 [vimrc](https://github.com/mhinz/dotfiles/blob/master/.vim/vimrc)입니다.
 ---
 
 [![Build Status](https://travis-ci.org/mhinz/vim-galore.svg?branch=master)](https://travis-ci.org/mhinz/vim-galore) [![badge-translation-japanese](https://img.shields.io/badge/Translation-Japanese-lightgrey.svg)](http://postd.cc/?s=vim-galore) [![vim-galore](https://cdn.rawgit.com/mhinz/vim-galore/master/contents/images/badge-awesome.svg)](https://github.com/sindresorhus/awesome)
@@ -210,21 +209,24 @@ Next steps:
 
 ## What kind of Vim am I running?
 
-`:version`을 보면  will give you all the information you need to know about how the currently running Vim binary was compiled.
+Vim에서 `:version`을 실행해보면 현재 실행중인 Vim 바이너리가 어떻게 컴파일 되었는지 알 수 있습니다. 
 
-Looking at `:version` will give you all the information you need to know about how the currently running Vim binary was compiled.
+첫 줄에는 언제 컴파일 되었는지와 버전 정보 (`8.0`) 가 있습니다.
+다음줄에는 패치 정보 (`Included patches: 1-5`)가 있습니다.
+이 경우 Vim의 버전은 8.0.5입니다.
 
-The first line tells you when the binary was compiled and the version, e.g. 7.4. One of the next lines states `Included patches: 1-1051`, which is the patch level. Thus, your exact Vim version is 7.4.1051.
+다음 줄에는 `Tiny version without GUI` 혹은 `Huge version with GUI` 정보가 있고, 이는 현재 실행중인 Vim이 GUI를 지원하는지 여부를 알 수 있습니다.
+즉 `gvim`에서 실행하고 있는지, 혹은 터미널에서 `:gui`를 실행하고 있는지에 대해서 알 수 있습니다. 다음 중요한 정보는 `Tiny` and `Huge` 입니다. Vim은 `tiny`, `small`, `normal`, `big`, `huge`으로 구분된 각기 다른 세트가 있습니다.
 
-Another line states something like `Tiny version without GUI` or `Huge version with GUI`. The obvious information from that is whether your Vim includes GUI support, e.g. for starting `gvim` from the shell or running `:gui` from Vim within a terminal emulator. The other important information is the `Tiny` and `Huge`. Vim distinguishes between feature sets called `tiny`, `small`, `normal`, `big`, and `huge`, all enabling different subsets of features.
+`:version`의 출력 결과의 대부분은 기능에 대한 목록입니다.
+`+clipboard`는 클립 보드 기능이 컴파일 할 때 포함되었음을, `-clipboard`는 컴파일 할 때 포함되지 않았음을 의미합니다.
 
-The majority of `:version` output is consumed by the feature list itself. `+clipboard` means the clipboard feature was compiled in, `-clipboard` means it wasn't compiled in.
+Vim의 일부 기능은 사용하기 위해서 컴파일 할 때 반드시 포함시켜야 합니다.
+예를 들면 `:prof`를 사용하기 위해서는 `huge` 버전의 세트와 `+profile` 기능이 컴파일 할때 포함되어야 합니다.
 
-A few Vim features need to be compiled in for them to work. E.g. for `:prof` to work, you need a Vim with a huge feature set, because that set enables the `+profile` feature.
+만약 그렇게하지 않고, 패키지 관리자를 이용하여 설치한 경우에는 `vim-x`, `vim-x11`, `vim-gtk`, `vim-gnome` 패키지들도 설치해야 합니다. 이러한 패키지들은 일반적으로 `huge` 버전의 세트를 포함하고 있기 때문입니다. 
 
-If that's not the case and you installed Vim from a package manager, make sure to install a package called `vim-x`, `vim-x11`, `vim-gtk`, `vim-gnome` or similar, since these packages usually come with the huge feature set.
-
-You can also test for the version or features programmatically:
+또한 버전에 따라서 동작하도록 프로그래밍 할 수 있습니다. 
 
 ```vim
 " Do something if running at least Vim 7.4.42 with +profile enabled.
@@ -233,7 +235,7 @@ if (v:version > 704 || v:version == 704 && has('patch42')) && has('profile')
 endif
 ```
 
-Related help:
+관련 도움말:
 
 ```
 :h :version
@@ -250,31 +252,33 @@ Related help:
 - <http://michael.peopleofhonoronly.com/vim/vim_cheat_sheet_for_programmers_screen.png>
 - <http://www.rosipov.com/images/posts/vim-movement-commands-cheatsheet.png>
 
-Or quickly open a cheatsheet from within Vim: [vim-cheat40](https://github.com/lifepillar/vim-cheat40).
+설치해서 Vim으로 cheatsheet을 빠르게 열어보고 싶다면: [vim-cheat40](https://github.com/lifepillar/vim-cheat40).
 
 # Basics
 
 ## Buffers, windows, tabs?
 
-Vim is a text editor. Every time text is shown, the text is part of a **buffer**. Each file will be opened in its own buffer. Plugins show stuff in their own buffers etc.
+Vim은 텍스트 편집기입니다. 화면에 보이는 모든 텍스트는 **buffer**의 일부입니다. 각 파일들은 그 각각의 버퍼에서 open됩니다. 플러그인들도 각각의 버퍼에서 표시됩니다.
 
-Buffers have many attributes, e.g. whether the text it contains is modifiable, or whether it is associated with a file and thus needs to be synchronized to disk on saving.
+버퍼는 다양한 속성을 가지고 있습니다.
+예를 들면, 텍스트가 수정할 수 있는 속성을 가지고 있는지, 파일과 연결되어있고, 디스크에 기록할 때 동기화할 필요가 있는지 등등.
 
-**Windows** are viewports _onto_ buffers. If you want to view several files at the same time or even different locations of the same file, you use windows.
+**Windows**는 버퍼의 내용을 볼 수 있는 일종의 창입니다. 여러 파일의 내용을 동시에 보여주거나 하나의 파일에서 여러 부분을 보여주기 위해 `windows`를 사용합니다.
 
-And please, please don't call them _splits_. You can split a window in two, but that doesn't make them _splits_.
+창 분할과 혼동하지 말아주세요.
+창은 2개로 분할할 수 있지만 분할 된 이후의 각 화면들은 더이상 분할 되지 않습니다.
 
-Windows can be split vertically or horizontally and the heights and widths of existing windows can be altered, too. Therefore, you can use whatever window layout you prefer.
+창은 수직, 수평으로 분할 할 수 있습니다. 분할한 경우 기존 창의 크기를 바꿀 수 있기 때문에 본인이 사용하기 적절하게 레이아웃을 자유롭게 바꿀 수 있습니다.
 
-A **tab page** (or just tab) is a collection of windows. Thus, if you want to use multiple window layouts, use tabs.
+**tab page** (or just tab)은 `windows`의 집합입니다. 그래서 여러 개의 창을 바둑판 식으로 나열할 때는 `tab`을 사용합니다.
 
-Putting it in a nutshell, if you start Vim without arguments, you'll have one tab page that holds one window that shows one buffer.
+요약하자면, argument 없이 단순히 vim을 실행한 경우, 이는 1개의 버퍼를 보여주는 1개의 창과 그에 해당하는 1개의 tap 페이지가 있는 것입니다.
 
-By the way, the buffer list is global and you can access any buffer from any tab.
+참고로 버퍼는 전역적으로 사용하기 때문에 아무 버퍼나 tab에 접근할 수 있습니다.
 
 ## Active, loaded, listed, named buffers?
 
-Run Vim like this `vim file1`. The file's content will be loaded into a buffer. You have a **loaded buffer** now. The content of the buffer is only synchronized to disk (written back to the file) if you save it within Vim.
+`vim file1` 명령으로 Vim을 시작하고 이 파일의 내용이 버퍼에 load 됩니다. 이 버퍼를 **loaded buffer**라고 합니다. 버퍼의 내용은 Vim으로 저장한 경우에만 디스크와 동기화 됩니다.(파일에 저장됩니다.)
 
 Since the buffer is also shown in a window, it's also an **active buffer**. Now if you load another file via `:e file2`, `file1` will become a **hidden buffer** and `file2` the active one.
 
