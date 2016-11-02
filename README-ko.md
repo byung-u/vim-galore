@@ -265,7 +265,7 @@ Vim은 텍스트 편집기입니다. 화면에 보이는 모든 텍스트는 **b
 
 **Windows**는 버퍼의 내용을 볼 수 있는 일종의 창입니다. 여러 파일의 내용을 동시에 보여주거나 하나의 파일에서 여러 부분을 보여주기 위해 `windows`를 사용합니다.
 
-창 분할과 혼동하지 말아주세요.
+창 분할과 혼동할 수도 있습니다.
 창은 2개로 분할할 수 있지만 분할 된 이후의 각 화면들은 더이상 분할 되지 않습니다.
 
 창은 수직, 수평으로 분할 할 수 있습니다. 분할한 경우 기존 창의 크기를 바꿀 수 있기 때문에 본인이 사용하기 적절하게 레이아웃을 자유롭게 바꿀 수 있습니다.
@@ -280,16 +280,22 @@ Vim은 텍스트 편집기입니다. 화면에 보이는 모든 텍스트는 **b
 
 `vim file1` 명령으로 Vim을 시작하고 이 파일의 내용이 버퍼에 load 됩니다. 이 버퍼를 **loaded buffer**라고 합니다. 버퍼의 내용은 Vim으로 저장한 경우에만 디스크와 동기화 됩니다.(파일에 저장됩니다.)
 
-Since the buffer is also shown in a window, it's also an **active buffer**. Now if you load another file via `:e file2`, `file1` will become a **hidden buffer** and `file2` the active one.
+버퍼의 내용을 화면에서 볼 수 있을 때, 이를 **active buffer**라고 합니다.
+`vim file1`로 뭔가 작성 중이던 상태에서, 만약 `:e file2`로 다른 파일을 읽어오면 `file1`은 **hidden buffer**가 되고 `file2`가 활성화 됩니다.
 
-Both buffers are also **listed**, thus they will get listed in the output of `:ls`. Plugin buffers or help buffers are often marked as unlisted, since they're not regular files you usually edit with a text editor. Listed and unlisted buffers can be shown via `:ls!`.
+**active buffer, hidden buffer** 모두 **listed**라고도 합니다. 그래서 `:ls`명령으로 리스트를 확인할 수 있습니다(listed). 
+플러그인 버퍼와 help 버퍼는 편집기에서 일반적으로 사용하는 일반 파일이 아니기 때문에 리스트로 관리하지 않습니다(unlisted).
+Listed와 unlisted 버퍼 모두 확인하고 싶은 경우에는 `:ls!`명령으로 확인할 수 있습니다.
 
-**Unnamed buffers**, also often used by plugins, are buffers that don't have an associated filename. E.g. `:enew` will create an unnamed scratch buffer. Add some text and write it to disk via `:w /tmp/foo`, and it will become a named buffer.
+**Unnamed buffers**는 플러그인에서 가끔 사용하고 파일명이 없습니다. `:enew` 명령을 실행하면 Unnamed 버퍼가 생성됩니다. 작성한 텍스트를 디스크에 저장하기 위해 `:w /tmp/foo` 명령을 실행하면 이는 **named buffer**가 됩니다.
 
 ## Argument list?
 
-The [global buffer list](#buffers-windows-tabs) is a Vim thing. Before that, in vi, there only used to be the argument list, which is also available in Vim.
+[global buffer list](#buffers-windows-tabs)는 vim의 좋은 기능 중 하나입니다.
+Vi에서는 argument list만 사용할 수 있는데, 이는 vim에서도 사용할 수 있습니다.
 
+Vim의 command-line 쉘에 모든 파일명을 볼 수 있고 이는 argument list에 기억됩니다.
+argument list는 여러개로 관리할 수도 있습니다. 기본 적으로 모든 arguments는 `global argument list`에 둡니다. 
 Every filename given to Vim on the shell command-line, is remembered in the argument list. There can be multiple argument lists: by default all arguments are put into the global argument list, but you can use `:arglocal` to create a new argument list that is local to the window.
 
 List the current arguments with `:args`. Switch between files from the argument list with `:next`, `:previous`, `:first`, `:last` and friends. Alter it with `:argadd`, `:argdelete` or `:args` with a list of files.
