@@ -294,26 +294,32 @@ Listed와 unlisted 버퍼 모두 확인하고 싶은 경우에는 `:ls!`명령�
 [global buffer list](#buffers-windows-tabs)는 vim의 좋은 기능 중 하나입니다.
 Vi에서는 argument list만 사용할 수 있는데, 이는 vim에서도 사용할 수 있습니다.
 
-Vim의 command-line 쉘에 모든 파일명을 볼 수 있고 이는 argument list에 기억됩니다.
-argument list는 여러개로 관리할 수도 있습니다. 기본 적으로 모든 arguments는 `global argument list`에 둡니다. 
-Every filename given to Vim on the shell command-line, is remembered in the argument list. There can be multiple argument lists: by default all arguments are put into the global argument list, but you can use `:arglocal` to create a new argument list that is local to the window.
+Vim의 command-line 쉘에서 모든 파일명을 볼 수 있고 이는 argument list에 기억됩니다.
+argument list는 여러개로 관리할 수도 있습니다. 기본 적으로 모든 arguments는 `global argument list`에 둡니다.
+현재 window에서 새로운 argument list는 `:arglocal`명령으로 만들 수 있습니다.
 
-List the current arguments with `:args`. Switch between files from the argument list with `:next`, `:previous`, `:first`, `:last` and friends. Alter it with `:argadd`, `:argdelete` or `:args` with a list of files.
+현재의 argument들은 `:args`로 조회할 수 있고 파일들간에 이동은 `:next`, `:previous`, `:first`, `:last`로 할 수 있습니다.
+argument의 변경은 `:argadd`, `:argdelete`, `:args` 명령으로 할 수 있습니다.
 
-If you should prefer using the buffer or argument list for working with files is a matter of taste. My impression is that most people use the buffer list exclusively.
+버퍼를 사용하거나 argument list를 사용하거나 이는 개인 취향에 따라 다릅니다.
+대부분의 사람들이 버퍼를 사용하는 것으로 알 고 있습니다.
 
-Nevertheless, there is one huge use case for the argument list: batch processing via `:argdo`! A simple refactoring example:
+그래도 argumnet list는 매우 다양한 사용법을 제공합니다. `:argdo` 명령으로 일괄처리하는 간단한 리팩토링의 예제입니다.
 
 ```vim
 :args **/*.[ch]
 :argdo %s/foo/bar/ge | update
 ```
 
-This replaces all occurrences of "foo" by "bar" in all C source and header files from the current directory and below.
+이 명령을 수행한 결과는 현재 디렉토리에 있는 모든 *.c *.h 파일의 "foo"를 "bar로 대체시킵니다. 
 
-Related help: `:h argument-list`
+관련된 도움말: `:h argument-list`
 
 ## Mappings?
+
+`:map` 명령 그룹을 이요해서 자신만의 키를 매핑을 할 수 있습니다. 
+명령어 그룹의 각 명령들은 특정 모드의 매핑을 정의하기 위해 사용합니다.
+
 
 You can define your own mappings with the `:map` family of commands. Each command of that family defines a mapping for a certain set of modes. Technically Vim comes with a whopping 12 modes, 6 of them can be mapped. Additionally, some commands act on multiple modes at once.
 
