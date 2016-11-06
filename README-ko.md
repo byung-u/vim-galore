@@ -317,11 +317,9 @@ argument의 변경은 `:argadd`, `:argdelete`, `:args` 명령으로 할 수 있�
 
 ## Mappings?
 
-`:map` 명령 그룹을 이요해서 자신만의 키를 매핑을 할 수 있습니다. 
+`:map` 명령 그룹을 이용해서 자신만의 키를 매핑을 할 수 있습니다. 
 명령어 그룹의 각 명령들은 특정 모드의 매핑을 정의하기 위해 사용합니다.
-
-
-You can define your own mappings with the `:map` family of commands. Each command of that family defines a mapping for a certain set of modes. Technically Vim comes with a whopping 12 modes, 6 of them can be mapped. Additionally, some commands act on multiple modes at once.
+좀 더 정확하게 말씀드리면 vim에는 총 12개의 모드가 있으며 이중 6개의 모드에 대한 매핑을 설정할 수 있습니다. 또한 몇몇 명령어들은 동시에 여러 모드로 동작 할 수 있습니다.
 
 Recursive | Non-recursive | Unmap     | Modes
 --------- | ------------- | --------- | --------------------------------
@@ -332,49 +330,51 @@ Recursive | Non-recursive | Unmap     | Modes
 `:omap`   | `:onoremap`   | `:ounmap` | operator-pending
 `:imap`   | `:inoremap`   | `:iunmap` | insert
 
-E.g. this defines the mapping for normal mode only:
+예: normal 모드에 대한 매핑에 대해서만 정의하는 경우
 
 ```vim
 :nmap <space> :echo "foo"<cr>
 ```
 
-Unmap it again by using `:nunmap <space>`.
+`:nunmap <space>`으로 Unmap하면 취소할 수 있습니다. .
 
-For a few more but rather uncommon modes (or combinations of them), see `:h map-modes`.
+위의 예시 말고 더 많은 모드들이 있습니다. 그에 대한 내용은 `:h map-modes` 명령으로 확인할 수 있습니다.
 
-So far, so good. There's only one problem that can be pretty confusing to beginners: `:nmap` is _recursive_! That is, the right-hand side takes other mappings into account.
+지금까지는 그럭저럭 이해할만 합니다. 그런데 vim을 막 시작하신 분들이 이해하기 어려운 것이 있습니다. `:nmap` 은 _recursive_ 합니다. 즉, 명령어 수행했을 때 매핑된 정보들은 현재 계정의 모든 키에 매핑됩니다. 아래 예를 들어 설명 드리겠습니다.
 
-So you defined a mapping that simply echoes "Foo":
+예: 단순히 echo "Foo"를 매핑하는 경우
 
 ```vim
 :nmap b :echo "Foo"<cr>
 ```
 
-But what if you want to map the default behavior of `b` (going one word back) to another key?
+`b`의 기본동작은 한개의 단어(word)만큼 뒤로 갑니다. 이 기능을 다른 키에 매핑 시켜보겠습니다.
 
 ```vim
 :nmap a b
 ```
 
-If you hit
+키보드에서 `a`를 누르면 한개의 단어만큼 뒤로 가야하지만 "Foo"가 커맨드 라인에 출력됩니다. 왜냐하면 `b`는 `:nmap b :echo "Foo"<cr>`로 이미 매핑 해두었기 때문입니다.
 
-<kbd>a</kbd>
-
-, we expect the cursor to go back a word, but instead "Foo" is printed in the command-line! Because the right-hand side, `b`, was mapped to another action already, namely `:echo "Foo"<cr>`.
-
-The proper way to resolve this problem is to use a _non-recursive_ mapping instead:
+이런 _recursive_한 문제를 해결하려면 _non-recursive_를 사용해야 합니다.
 
 ```vim
 :nnoremap a b
 ```
 
-Rule of thumb: Always use non-recursive mappings unless recursing is actually desired.
+`nnoremap`을 사용해서 매핑하면 키보드에서 `a`를 누른 경우 "Foo"가 출력되지 않고 default `b`의 기능인 한개의 단어만큼 뒤로 가게 됩니다.
 
-Look up your mappings by not giving a right-hand side. E.g. `:nmap` shows all normal mappings and `:nmap <leader>` shows all normal mappings that start with the mapleader.
+따라서 중요한 원칙 하나는 꼭 _recursive_한 기능이 필요한 일부 상황을 제외하고는 항상 _non-recursive_ 매핑을 기본적으로 사용해야 합니다. 
 
-If you want to disable a standard mapping, map them to the special `<nop>` character, e.g. `:noremap <left> <nop>`.
+Look up your mappings by not giving a right-hand side. 
+예:
+  * `:nmap`은 모든 일반 매핑을 보여줍니다.
+  * `:nmap <leader>`는 mapleader로 시작하는 모든 일반 매핑을 보여줍니다. (mapleader에 대한 설명은 다음 챕터에 있습니다.)
 
-Related help:
+만약 기본적인 매핑을 해제하고 싶은 경우 `<nop>`이라는 특수문자를 사용합니다.
+예: `:noremap <left> <nop>`.
+
+관련 도움말:
 
 ```
 :h key-notation
@@ -384,13 +384,13 @@ Related help:
 
 ## Mapleader?
 
-The mapleader is simply a placeholder than can be used with custom mappings and is set to `\` by default.
+Mapleader는 기본적으로 `\` 설정으로 사용자 정의 매핑에 사용하고 있습니다.
 
 ```vim
 nnoremap <leader>h :helpgrep<space>
 ```
 
-This mapping is triggered by `\h`. If you want to use `<space>h` instead:
+이 매핑은 만약 사용자가 `<space>h` 대신에 `\h`로 대신 사용하는 경우 사용합니다.
 
 ```vim
 let mapleader = ' '
