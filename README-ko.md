@@ -397,14 +397,19 @@ let mapleader = ' '
 nnoremap <leader>h :helpgrep<space>
 ```
 
-Moreover, there is `<localleader>` that is the local counterpart to `<leader>` and is supposed to be used for mappings that are local to the buffer, eg. filetype-specific plugins. It also defaults to `\`.
+TODO: need to fix
+또한 <leader>의 local 쪽은 <localleader>가 있습니다. 예를 들어 파일 형식에 맞는 플러그인 등 현지에서 버퍼에 매핑에 사용할 수 있습니다. 이것도 기본적으로 `\`로 할당되어 있습니다.
 
-**Note**: Set the mapleaders before mappings! All leader mappings that are in effect already, won't change just because the mapleader was changed. `:nmap
+**Note**: 맵 리더는 매핑하기 전에 설정해야 합니다. 이미 이용하고 있는 맵 리더의 매핑 설정은 맵 리더가 변경 되어도 변경되지 않습니다. `:nmap <leader>`를 실행하면 일반 모드로 맵 리더가 이미 해결 된 매핑이 모두 표시되기 때문에, 만약을 위해 자신의 매핑과 일치하는지 확인해야 합니다.
+
 
 <leader>` will show all normal mode leader mappings with the mapleader resolved
 already, so use it to double-check your mappings.</leader>
 
 See `:h mapleader` and `:h maplocalleader` for more.
+
+자세한 내용은 :h mapleader또는 :h maplocalleader입력하여 표시되는 텍스트를 참조하십시오.
+
 
 ## Registers?
 
